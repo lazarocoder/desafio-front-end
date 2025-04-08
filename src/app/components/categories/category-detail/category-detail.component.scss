@@ -1,0 +1,23 @@
+.container {
+  padding: 20px;
+}
+
+.category-card {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.category-description, .category-products {
+  margin-top: 20px;
+}
+
+.not-found {
+  text-align: center;
+  margin-top: 50px;
+}

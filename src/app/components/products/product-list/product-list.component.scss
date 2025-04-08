@@ -1,0 +1,38 @@
+.container {
+  padding: 20px;
+}
+
+.button-container {
+  margin-bottom: 20px;
+}
+
+.product-card {
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.no-data {
+  text-align: center;
+  margin: 20px 0;
+  font-style: italic;
+  color: #666;
+}
+
+.active {
+  color: green;
+  font-weight: bold;
+}
+
+.inactive {
+  color: red;
+  font-weight: bold;
+}
