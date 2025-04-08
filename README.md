@@ -221,8 +221,6 @@ git commit -m 'feat: descrição da feature'
 git push origin feature/nome-da-feature
 ```
 
-4. Abra um Pull Request
-
 ## Build
 
 Para criar uma build de produção:
