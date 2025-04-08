@@ -240,10 +240,30 @@ Para executar os testes:
 ```bash
 npm test
 ```
+# Tela inicial de login: 
+![image](https://github.com/user-attachments/assets/94d7a3c7-b3fa-4e67-a0ec-1ef0d3f74d6c)
+- demonstração de validação: 
+
+![image](https://github.com/user-attachments/assets/65813ed5-83af-491e-82a7-7aa5c1539b5f)
+
+![image](https://github.com/user-attachments/assets/5ae74791-3da8-4f2e-a5d1-611eeeff7d06)
+
+![image](https://github.com/user-attachments/assets/6aa0ada2-e9e8-4e5f-a2d0-2fd9af0ce762)
+
+- Demonstração de responsividade: 
+
+![image](https://github.com/user-attachments/assets/9d823835-a885-4734-b2af-05691d3cb8a0)
+
+![image](https://github.com/user-attachments/assets/9538d3ca-f83a-4874-8860-00d5dccdbd8d)
+
+![image](https://github.com/user-attachments/assets/3ed03b38-fea8-45d1-96f6-349d70821800)
+
+
+
+
 
 ## Licença
-
-Este projeto está sob a licença MIT.
+N/A.
 
 # Desafio Frontend – Requisitos
 
