@@ -1,4 +1,4 @@
-# Sistema de Gerenciamento de Usuários/Produtos - Frontend Angular
+# A interface tem como finalidade integração com back-end e a gestão de produtos, onde também podemos gerenciar os usuários - Frontend Angular
 
 ## Sumário
 1. [Requisitos e Versões](#requisitos-e-versões)
