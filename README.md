@@ -145,6 +145,106 @@ POST http://localhost:8080/api/users/avatar
 Body: FormData (multipart/form-data)
 ```
 
+#### 3. Produtos
+```typescript
+// Listagem de Produtos
+GET /api/products
+Query Params: {
+    page: number,
+    size: number,
+    sort: string,
+    category?: string,
+    minPrice?: number,
+    maxPrice?: number,
+    search?: string
+}
+Response: {
+    content: Product[],
+    totalElements: number,
+    totalPages: number,
+    size: number,
+    number: number
+}
+
+// Obter Produto por ID
+GET /api/products/:id
+Response: Product
+
+// Criar Produto
+POST /api/products
+Body: {
+    name: string,
+    description: string,
+    price: number,
+    category: string,
+    stock: number,
+    imageUrl?: string
+}
+
+// Atualizar Produto
+PUT /api/products/:id
+Body: {
+    name?: string,
+    description?: string,
+    price?: number,
+    category?: string,
+    stock?: number,
+    imageUrl?: string
+}
+
+// Excluir Produto
+DELETE /api/products/:id
+
+// Atualizar Estoque
+PATCH /api/products/:id/stock
+Body: {
+    quantity: number,
+    operation: 'add' | 'subtract'
+}
+
+// Upload de Imagem
+POST /api/products/:id/images
+Body: FormData com arquivo de imagem
+
+// Listar Categorias
+GET /api/products/categories
+Response: string[]
+
+// Produtos com Estoque Baixo
+GET /api/products/low-stock
+Query Params: { threshold?: number }
+
+// Relatório de Produtos
+GET /api/products/report
+Query Params: { format: 'csv' | 'pdf' | 'excel' }
+```
+
+#### 4. Estatísticas
+```typescript
+// Dashboard
+GET /api/dashboard/stats
+Response: {
+    totalUsers: number,
+    totalProducts: number,
+    lowStockProducts: number,
+    activeUsers: number,
+    totalCategories: number,
+    recentSales: {
+        date: string,
+        amount: number
+    }[],
+    topProducts: {
+        id: number,
+        name: string,
+        sales: number
+    }[]
+}
+```
+
+
+
+
+
 ### Configuração CORS no Spring Boot
 
 ```java
