@@ -1,4 +1,4 @@
-# Sistema de Gerenciamento de Usuários - Frontend Angular
+# Sistema de Gerenciamento de Usuários/Produtos - Frontend Angular
 
 ## Sumário
 1. [Requisitos e Versões](#requisitos-e-versões)
