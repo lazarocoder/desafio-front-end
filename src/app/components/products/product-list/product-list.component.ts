@@ -8,9 +8,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 import { Product } from '../../../models/product.model';
-import { ProductService } from '../../../services/product.service';
+import { ProductService, PaginatedResponse } from '../../../services/product.service';
 
 @Component({
   selector: 'app-product-list',
@@ -24,7 +25,8 @@ import { ProductService } from '../../../services/product.service';
     MatCardModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatPaginatorModule
   ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
@@ -33,6 +35,13 @@ export class ProductListComponent implements OnInit {
   products: Product[] = [];
   displayedColumns: string[] = ['id', 'name', 'price', 'status', 'code', 'actions'];
   loading = true;
+  
+  // Pagination properties
+  totalElements = 0;
+  totalPages = 0;
+  currentPage = 0;
+  pageSize = 10;
+  pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
     private productService: ProductService,
@@ -45,9 +54,13 @@ export class ProductListComponent implements OnInit {
 
   loadProducts(): void {
     this.loading = true;
-    this.productService.getAllProducts().subscribe({
-      next: (data) => {
-        this.products = data;
+    this.productService.getProducts(this.currentPage, this.pageSize).subscribe({
+      next: (response: PaginatedResponse<Product>) => {
+        this.products = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.currentPage = response.number;
+        this.pageSize = response.size;
         this.loading = false;
       },
       error: (error) => {
@@ -56,6 +69,12 @@ export class ProductListComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadProducts();
   }
 
   deleteProduct(id: number): void {

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-custom-input',
@@ -16,7 +16,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/f
         [value]="value"
         [disabled]="disabled"
         [readonly]="readonly"
-        [maxlength]="maxLength"
+        [attr.maxlength]="maxLength"
         [min]="min"
         [max]="max"
         [step]="step"
@@ -58,7 +58,7 @@ export class CustomInputComponent implements ControlValueAccessor {
   @Input() step: number | null = null;
   @Input() errorMessage: string = '';
   @Input() hint: string = '';
-  @Input() control: FormControl | null = null;
+  @Input() control: AbstractControl | null = null;
 
   @Output() valueChange = new EventEmitter<any>();
   @Output() blur = new EventEmitter<void>();

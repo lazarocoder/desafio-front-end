@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, AbstractControl } from '@angular/forms';
 
 export interface SelectOption {
   value: any;
@@ -64,7 +64,7 @@ export class CustomSelectComponent implements ControlValueAccessor {
   @Input() options: SelectOption[] = [];
   @Input() errorMessage: string = '';
   @Input() hint: string = '';
-  @Input() control: FormControl | null = null;
+  @Input() control: AbstractControl | null = null;
 
   @Output() valueChange = new EventEmitter<any>();
   @Output() blur = new EventEmitter<void>();

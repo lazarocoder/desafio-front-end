@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-custom-textarea',
@@ -15,7 +15,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/f
         [value]="value"
         [disabled]="disabled"
         [readonly]="readonly"
-        [maxlength]="maxLength"
+        [attr.maxlength]="maxLength"
         [rows]="rows"
         [required]="required"
         (input)="onInput($event)"
@@ -52,7 +52,7 @@ export class CustomTextareaComponent implements ControlValueAccessor {
   @Input() rows: number = 3;
   @Input() errorMessage: string = '';
   @Input() hint: string = '';
-  @Input() control: FormControl | null = null;
+  @Input() control: AbstractControl | null = null;
 
   @Output() valueChange = new EventEmitter<string>();
   @Output() blur = new EventEmitter<void>();

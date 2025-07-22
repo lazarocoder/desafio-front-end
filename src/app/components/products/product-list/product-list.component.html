@@ -63,6 +63,18 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
 
+      <!-- Pagination -->
+      <mat-paginator 
+        *ngIf="!loading && products.length > 0"
+        [length]="totalElements"
+        [pageSize]="pageSize"
+        [pageIndex]="currentPage"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onPageChange($event)"
+        showFirstLastButtons
+        aria-label="Select page of products">
+      </mat-paginator>
+
       <div *ngIf="!loading && products.length === 0" class="no-data">
         No products found.
       </div>
