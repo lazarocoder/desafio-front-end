@@ -5,49 +5,46 @@
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline">
-          <mat-label>Nome</mat-label>
-          <input matInput formControlName="name" placeholder="Digite seu nome">
-          <mat-error *ngIf="registerForm.get('name')?.hasError('required')">
-            Nome é obrigatório
-          </mat-error>
-          <mat-error *ngIf="registerForm.get('name')?.hasError('minlength')">
-            Nome deve ter no mínimo 3 caracteres
-          </mat-error>
-        </mat-form-field>
+        <app-custom-input
+          label="Nome"
+          placeholder="Digite seu nome"
+          type="text"
+          [required]="true"
+          [control]="registerForm.get('name')"
+          [errorMessage]="getErrorMessage('name')"
+          formControlName="name">
+        </app-custom-input>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" placeholder="Digite seu email">
-          <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
-            Email é obrigatório
-          </mat-error>
-          <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
-            Email inválido
-          </mat-error>
-        </mat-form-field>
+        <app-custom-input
+          label="Email"
+          placeholder="Digite seu email"
+          type="email"
+          [required]="true"
+          [control]="registerForm.get('email')"
+          [errorMessage]="getErrorMessage('email')"
+          formControlName="email">
+        </app-custom-input>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Senha</mat-label>
-          <input matInput formControlName="password" type="password" placeholder="Digite sua senha">
-          <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
-            Senha é obrigatória
-          </mat-error>
-          <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
-            Senha deve ter no mínimo 6 caracteres
-          </mat-error>
-        </mat-form-field>
+        <app-custom-input
+          label="Senha"
+          placeholder="Digite sua senha"
+          type="password"
+          [required]="true"
+          [control]="registerForm.get('password')"
+          [errorMessage]="getErrorMessage('password')"
+          hint="Mínimo 6 caracteres"
+          formControlName="password">
+        </app-custom-input>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Confirmar Senha</mat-label>
-          <input matInput formControlName="confirmPassword" type="password" placeholder="Confirme sua senha">
-          <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
-            Confirmação de senha é obrigatória
-          </mat-error>
-          <mat-error *ngIf="registerForm.hasError('passwordMismatch')">
-            As senhas não conferem
-          </mat-error>
-        </mat-form-field>
+        <app-custom-input
+          label="Confirmar Senha"
+          placeholder="Confirme sua senha"
+          type="password"
+          [required]="true"
+          [control]="registerForm.get('confirmPassword')"
+          [errorMessage]="getErrorMessage('confirmPassword')"
+          formControlName="confirmPassword">
+        </app-custom-input>
 
         <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">
           Registrar

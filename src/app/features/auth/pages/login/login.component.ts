@@ -2,12 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
+import { CustomInputComponent } from '../../../../shared/components/form-controls';
 
 @Component({
   selector: 'app-login',
@@ -17,11 +16,11 @@ import { AuthService } from '@core/services/auth.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    CustomInputComponent
   ]
 })
 export class LoginComponent {
@@ -54,5 +53,18 @@ export class LoginComponent {
         }
       });
     }
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const control = this.loginForm.get(fieldName);
+    if (!control || !control.errors) return '';
+
+    if (control.errors['required']) {
+      return `${fieldName === 'email' ? 'Email' : 'Senha'} é obrigatório`;
+    }
+    if (control.errors['email']) {
+      return 'Email inválido';
+    }
+    return '';
   }
 } 

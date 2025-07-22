@@ -9,18 +9,27 @@
       </div>
 
       <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" placeholder="Category name" required>
-          <mat-error *ngIf="categoryForm.get('name')?.hasError('required')">
-            Name is required
-          </mat-error>
-        </mat-form-field>
+        <app-custom-input
+          label="Name"
+          placeholder="Category name"
+          type="text"
+          [required]="true"
+          [maxLength]="100"
+          [control]="categoryForm.get('name')"
+          [errorMessage]="getErrorMessage('name')"
+          formControlName="name">
+        </app-custom-input>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" placeholder="Category description" rows="3"></textarea>
-        </mat-form-field>
+        <app-custom-textarea
+          label="Description"
+          placeholder="Category description"
+          [maxLength]="255"
+          [rows]="3"
+          [control]="categoryForm.get('description')"
+          [errorMessage]="getErrorMessage('description')"
+          hint="Optional - Maximum 255 characters"
+          formControlName="description">
+        </app-custom-textarea>
 
         <div class="button-container">
           <button type="button" mat-button [routerLink]="['/categories']">Cancel</button>

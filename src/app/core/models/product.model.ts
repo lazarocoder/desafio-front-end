@@ -1,10 +1,10 @@
 export interface Product {
   id?: number;
-  name: string;
-  description?: string;
-  price: number;
-  status: ProductStatus;
-  category: Category;
+  name: string; // Required, max 100 characters
+  description?: string; // Optional, max 255 characters
+  price: number; // Required, must be > 0
+  status: ProductStatus; // Required
+  category: Category; // Required
 }
 
 export enum ProductStatus {
@@ -14,14 +14,14 @@ export enum ProductStatus {
 
 export interface Category {
   id?: number;
-  name: string;
-  description?: string;
+  name: string; // Max 100 characters
+  description?: string; // Optional, max 255 characters
 }
 
 export interface ProductFormData {
-  name: string;
-  description?: string;
-  price: number;
-  status: ProductStatus;
-  categoryId: number;
+  name: string; // Required, max 100 characters
+  description?: string; // Optional, max 255 characters
+  price: number; // Required, must be > 0
+  status: ProductStatus; // Required
+  categoryId: number; // Required
 } 

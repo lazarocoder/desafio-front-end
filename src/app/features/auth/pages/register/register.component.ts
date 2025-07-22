@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../../../../environments/environment';
+import { CustomInputComponent } from '../../../../shared/components/form-controls';
 
 @Component({
   selector: 'app-register',
@@ -19,11 +18,11 @@ import { environment } from '../../../../../environments/environment';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    CustomInputComponent
   ]
 })
 export class RegisterComponent {
@@ -67,5 +66,38 @@ export class RegisterComponent {
           }
         });
     }
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const control = this.registerForm.get(fieldName);
+    if (!control || !control.errors) {
+      // Check for form-level errors like password mismatch
+      if (fieldName === 'confirmPassword' && this.registerForm.hasError('passwordMismatch')) {
+        return 'As senhas não conferem';
+      }
+      return '';
+    }
+
+    if (control.errors['required']) {
+      const fieldDisplayNames: any = {
+        'name': 'Nome',
+        'email': 'Email',
+        'password': 'Senha',
+        'confirmPassword': 'Confirmação de senha'
+      };
+      return `${fieldDisplayNames[fieldName]} é obrigatório`;
+    }
+    if (control.errors['email']) {
+      return 'Email inválido';
+    }
+    if (control.errors['minlength']) {
+      const minLength = control.errors['minlength'].requiredLength;
+      const fieldDisplayNames: any = {
+        'name': 'Nome',
+        'password': 'Senha'
+      };
+      return `${fieldDisplayNames[fieldName]} deve ter no mínimo ${minLength} caracteres`;
+    }
+    return '';
   }
 } 

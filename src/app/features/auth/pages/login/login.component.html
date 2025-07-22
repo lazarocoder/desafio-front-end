@@ -5,24 +5,25 @@
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" placeholder="Digite seu email">
-          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
-            Email é obrigatório
-          </mat-error>
-          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
-            Email inválido
-          </mat-error>
-        </mat-form-field>
+        <app-custom-input
+          label="Email"
+          placeholder="Digite seu email"
+          type="email"
+          [required]="true"
+          [control]="loginForm.get('email')"
+          [errorMessage]="getErrorMessage('email')"
+          formControlName="email">
+        </app-custom-input>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Senha</mat-label>
-          <input matInput formControlName="password" type="password" placeholder="Digite sua senha">
-          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-            Senha é obrigatória
-          </mat-error>
-        </mat-form-field>
+        <app-custom-input
+          label="Senha"
+          placeholder="Digite sua senha"
+          type="password"
+          [required]="true"
+          [control]="loginForm.get('password')"
+          [errorMessage]="getErrorMessage('password')"
+          formControlName="password">
+        </app-custom-input>
 
         <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
           Entrar
