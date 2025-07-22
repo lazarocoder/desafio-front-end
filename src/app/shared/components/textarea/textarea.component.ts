@@ -1,6 +1,7 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef, OnInit, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-textarea',
@@ -27,6 +28,7 @@ import { CommonModule } from '@angular/common';
       flex-direction: column;
       gap: 0.5rem;
       width: 100%;
+      margin-bottom: 1rem;
     }
 
     .textarea-label {
@@ -68,7 +70,7 @@ import { CommonModule } from '@angular/common';
     }
   ]
 })
-export class TextareaComponent implements ControlValueAccessor {
+export class TextareaComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() label?: string;
   @Input() placeholder = '';
   @Input() rows = 4;
@@ -76,7 +78,18 @@ export class TextareaComponent implements ControlValueAccessor {
 
   control = new FormControl('');
   private onChange: (value: any) => void = () => {};
-  private onTouched: () => void = () => {};
+  onTouched: () => void = () => {};
+  private subscription?: Subscription;
+
+  ngOnInit() {
+    this.subscription = this.control.valueChanges.subscribe(value => {
+      this.onChange(value);
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
+  }
 
   get hasError(): boolean {
     return this.control.invalid && this.control.touched;
@@ -90,6 +103,7 @@ export class TextareaComponent implements ControlValueAccessor {
 
     if (errors['required']) return 'Este campo é obrigatório';
     if (errors['maxlength']) return `Máximo de ${errors['maxlength'].requiredLength} caracteres`;
+    if (errors['minlength']) return `Mínimo de ${errors['minlength'].requiredLength} caracteres`;
     
     return 'Campo inválido';
   }
@@ -100,7 +114,6 @@ export class TextareaComponent implements ControlValueAccessor {
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
-    this.control.valueChanges.subscribe(fn);
   }
 
   registerOnTouched(fn: any): void {

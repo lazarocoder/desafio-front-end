@@ -3,10 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -15,6 +12,9 @@ import { Product } from '../../../models/product.model';
 import { ProductService } from '../../../services/product.service';
 import { CategoryService } from '../../../services/category.service';
 import { Category } from '../../../models/category.model';
+import { InputComponent } from '@shared/components/input/input.component';
+import { TextareaComponent } from '@shared/components/textarea/textarea.component';
+import { SelectComponent } from '@shared/components/select/select.component';
 
 @Component({
   selector: 'app-product-form',
@@ -24,13 +24,13 @@ import { Category } from '../../../models/category.model';
     ReactiveFormsModule,
     RouterModule,
     MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
-    MatSelectModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    InputComponent,
+    TextareaComponent,
+    SelectComponent
   ],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss']
@@ -41,6 +41,13 @@ export class ProductFormComponent implements OnInit {
   isEditMode = false;
   loading = false;
   categories: Category[] = [];
+
+  get categoryOptions() {
+    return [
+      { value: '', label: 'None' },
+      ...this.categories.map(cat => ({ value: cat.id, label: cat.name }))
+    ];
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -66,12 +73,12 @@ export class ProductFormComponent implements OnInit {
 
   initForm(): void {
     this.productForm = this.fb.group({
-      name: ['', [Validators.required]],
-      description: [''],
-      price: [0, [Validators.required, Validators.min(0)]],
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.maxLength(255)]],
+      price: [0, [Validators.required, Validators.min(0.01)]],
       status: [true, [Validators.required]],
       code: [''],
-      categoryId: ['']
+      categoryId: ['', [Validators.required]]
     });
   }
 

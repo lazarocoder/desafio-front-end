@@ -9,18 +9,19 @@
       </div>
 
       <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" placeholder="Category name" required>
-          <mat-error *ngIf="categoryForm.get('name')?.hasError('required')">
-            Name is required
-          </mat-error>
-        </mat-form-field>
+        <app-input
+          label="Name"
+          type="text"
+          placeholder="Category name"
+          formControlName="name">
+        </app-input>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" placeholder="Category description" rows="3"></textarea>
-        </mat-form-field>
+        <app-textarea
+          label="Description"
+          placeholder="Category description"
+          [rows]="3"
+          formControlName="description">
+        </app-textarea>
 
         <div class="button-container">
           <button type="button" mat-button [routerLink]="['/categories']">Cancel</button>

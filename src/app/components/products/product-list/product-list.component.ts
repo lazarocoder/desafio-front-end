@@ -8,9 +8,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 import { Product } from '../../../models/product.model';
-import { ProductService } from '../../../services/product.service';
+import { ProductService, PaginatedResponse } from '../../../services/product.service';
 
 @Component({
   selector: 'app-product-list',
@@ -24,7 +25,8 @@ import { ProductService } from '../../../services/product.service';
     MatCardModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatPaginatorModule
   ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
@@ -33,6 +35,12 @@ export class ProductListComponent implements OnInit {
   products: Product[] = [];
   displayedColumns: string[] = ['id', 'name', 'price', 'status', 'code', 'actions'];
   loading = true;
+  
+  // Pagination properties
+  totalElements = 0;
+  pageSize = 10;
+  pageIndex = 0;
+  pageSizeOptions: number[] = [5, 10, 25, 50];
 
   constructor(
     private productService: ProductService,
@@ -45,9 +53,10 @@ export class ProductListComponent implements OnInit {
 
   loadProducts(): void {
     this.loading = true;
-    this.productService.getAllProducts().subscribe({
-      next: (data) => {
-        this.products = data;
+    this.productService.getProducts(this.pageIndex, this.pageSize).subscribe({
+      next: (data: PaginatedResponse<Product>) => {
+        this.products = data.content;
+        this.totalElements = data.totalElements;
         this.loading = false;
       },
       error: (error) => {
@@ -56,6 +65,12 @@ export class ProductListComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadProducts();
   }
 
   deleteProduct(id: number): void {

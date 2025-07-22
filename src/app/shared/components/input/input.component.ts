@@ -1,6 +1,7 @@
-import { Component, Input, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Component, Input, forwardRef, OnInit, OnDestroy } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, ReactiveFormsModule, NgControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-input',
@@ -27,6 +28,7 @@ import { CommonModule } from '@angular/common';
       flex-direction: column;
       gap: 0.5rem;
       width: 100%;
+      margin-bottom: 1rem;
     }
 
     .input-label {
@@ -66,7 +68,7 @@ import { CommonModule } from '@angular/common';
     }
   ]
 })
-export class InputComponent implements ControlValueAccessor {
+export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() label?: string;
   @Input() type: 'text' | 'password' | 'email' | 'number' = 'text';
   @Input() placeholder = '';
@@ -74,7 +76,21 @@ export class InputComponent implements ControlValueAccessor {
 
   control = new FormControl('');
   private onChange: (value: any) => void = () => {};
-  private onTouched: () => void = () => {};
+  onTouched: () => void = () => {};
+  private subscription?: Subscription;
+  ngControl?: NgControl;
+
+  constructor() {}
+
+  ngOnInit() {
+    this.subscription = this.control.valueChanges.subscribe(value => {
+      this.onChange(value);
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
+  }
 
   get hasError(): boolean {
     return this.control.invalid && this.control.touched;
@@ -87,6 +103,8 @@ export class InputComponent implements ControlValueAccessor {
     if (!errors) return '';
 
     if (errors['required']) return 'Este campo é obrigatório';
+    if (errors['email']) return 'Email inválido';
+    if (errors['minlength']) return `Mínimo de ${errors['minlength'].requiredLength} caracteres`;
     if (errors['maxlength']) return `Máximo de ${errors['maxlength'].requiredLength} caracteres`;
     if (errors['min']) return `Valor mínimo: ${errors['min'].min}`;
     
@@ -99,7 +117,6 @@ export class InputComponent implements ControlValueAccessor {
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
-    this.control.valueChanges.subscribe(fn);
   }
 
   registerOnTouched(fn: any): void {
