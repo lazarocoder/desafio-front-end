@@ -1,18 +1,35 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category } from '../models/category.model';
+import { environment } from '../../environments/environment';
+
+export interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiUrl = '/api/categories';
+  private apiUrl = `${environment.apiUrl}/api/v2/categories`;
 
   constructor(private http: HttpClient) { }
 
   getAllCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(this.apiUrl);
+  }
+
+  getCategories(page = 0, size = 10): Observable<PaginatedResponse<Category>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<PaginatedResponse<Category>>(this.apiUrl, { params });
   }
 
   getCategoryById(id: number): Observable<Category> {
