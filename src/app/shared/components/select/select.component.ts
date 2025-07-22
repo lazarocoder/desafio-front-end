@@ -1,6 +1,7 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef, OnInit, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 interface SelectOption {
   value: any;
@@ -35,6 +36,7 @@ interface SelectOption {
       flex-direction: column;
       gap: 0.5rem;
       width: 100%;
+      margin-bottom: 1rem;
     }
 
     .select-label {
@@ -76,14 +78,25 @@ interface SelectOption {
     }
   ]
 })
-export class SelectComponent implements ControlValueAccessor {
+export class SelectComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() label?: string;
   @Input() options: SelectOption[] = [];
   @Input() id = `select-${Math.random().toString(36).substr(2, 9)}`;
 
   control = new FormControl('');
   private onChange: (value: any) => void = () => {};
-  private onTouched: () => void = () => {};
+  onTouched: () => void = () => {};
+  private subscription?: Subscription;
+
+  ngOnInit() {
+    this.subscription = this.control.valueChanges.subscribe(value => {
+      this.onChange(value);
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
+  }
 
   get hasError(): boolean {
     return this.control.invalid && this.control.touched;
@@ -106,7 +119,6 @@ export class SelectComponent implements ControlValueAccessor {
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
-    this.control.valueChanges.subscribe(fn);
   }
 
   registerOnTouched(fn: any): void {

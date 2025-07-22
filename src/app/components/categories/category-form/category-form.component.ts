@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { Category } from '../../../models/category.model';
 import { CategoryService } from '../../../services/category.service';
+import { InputComponent } from '@shared/components/input/input.component';
+import { TextareaComponent } from '@shared/components/textarea/textarea.component';
 
 @Component({
   selector: 'app-category-form',
@@ -20,11 +20,11 @@ import { CategoryService } from '../../../services/category.service';
     ReactiveFormsModule,
     RouterModule,
     MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    InputComponent,
+    TextareaComponent
   ],
   templateUrl: './category-form.component.html',
   styleUrls: ['./category-form.component.scss']
@@ -57,8 +57,8 @@ export class CategoryFormComponent implements OnInit {
 
   initForm(): void {
     this.categoryForm = this.fb.group({
-      name: ['', [Validators.required]],
-      description: ['']
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.maxLength(255)]]
     });
   }
 
