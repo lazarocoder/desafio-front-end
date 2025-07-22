@@ -3,10 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -15,6 +12,7 @@ import { Product } from '../../../models/product.model';
 import { ProductService } from '../../../services/product.service';
 import { CategoryService } from '../../../services/category.service';
 import { Category } from '../../../models/category.model';
+import { CustomInputComponent, CustomTextareaComponent, CustomSelectComponent, SelectOption } from '../../../shared/components/form-controls';
 
 @Component({
   selector: 'app-product-form',
@@ -24,13 +22,13 @@ import { Category } from '../../../models/category.model';
     ReactiveFormsModule,
     RouterModule,
     MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
-    MatSelectModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    CustomInputComponent,
+    CustomTextareaComponent,
+    CustomSelectComponent
   ],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss']
@@ -41,6 +39,7 @@ export class ProductFormComponent implements OnInit {
   isEditMode = false;
   loading = false;
   categories: Category[] = [];
+  categoryOptions: SelectOption[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -66,12 +65,12 @@ export class ProductFormComponent implements OnInit {
 
   initForm(): void {
     this.productForm = this.fb.group({
-      name: ['', [Validators.required]],
-      description: [''],
-      price: [0, [Validators.required, Validators.min(0)]],
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.maxLength(255)]],
+      price: [0, [Validators.required, Validators.min(0.01)]],
       status: [true, [Validators.required]],
       code: [''],
-      categoryId: ['']
+      categoryId: ['', [Validators.required]]
     });
   }
 
@@ -79,6 +78,13 @@ export class ProductFormComponent implements OnInit {
     this.categoryService.getAllCategories().subscribe({
       next: (data) => {
         this.categories = data;
+        this.categoryOptions = [
+          { value: '', label: 'Select a category' },
+          ...data.map(category => ({ 
+            value: category.id, 
+            label: category.name 
+          }))
+        ];
       },
       error: (error) => {
         console.error('Error loading categories', error);
@@ -147,5 +153,22 @@ export class ProductFormComponent implements OnInit {
         }
       });
     }
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const control = this.productForm.get(fieldName);
+    if (!control || !control.errors) return '';
+
+    if (control.errors['required']) {
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
+    }
+    if (control.errors['maxlength']) {
+      const maxLength = control.errors['maxlength'].requiredLength;
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} must not exceed ${maxLength} characters`;
+    }
+    if (control.errors['min']) {
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} must be greater than 0`;
+    }
+    return '';
   }
 }

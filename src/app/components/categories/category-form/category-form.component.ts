@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { Category } from '../../../models/category.model';
 import { CategoryService } from '../../../services/category.service';
+import { CustomInputComponent, CustomTextareaComponent } from '../../../shared/components/form-controls';
 
 @Component({
   selector: 'app-category-form',
@@ -20,11 +19,11 @@ import { CategoryService } from '../../../services/category.service';
     ReactiveFormsModule,
     RouterModule,
     MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    CustomInputComponent,
+    CustomTextareaComponent
   ],
   templateUrl: './category-form.component.html',
   styleUrls: ['./category-form.component.scss']
@@ -57,8 +56,8 @@ export class CategoryFormComponent implements OnInit {
 
   initForm(): void {
     this.categoryForm = this.fb.group({
-      name: ['', [Validators.required]],
-      description: ['']
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.maxLength(255)]]
     });
   }
 
@@ -118,5 +117,19 @@ export class CategoryFormComponent implements OnInit {
         }
       });
     }
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const control = this.categoryForm.get(fieldName);
+    if (!control || !control.errors) return '';
+
+    if (control.errors['required']) {
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
+    }
+    if (control.errors['maxlength']) {
+      const maxLength = control.errors['maxlength'].requiredLength;
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} must not exceed ${maxLength} characters`;
+    }
+    return '';
   }
 }

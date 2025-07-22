@@ -9,44 +9,58 @@
       </div>
 
       <form [formGroup]="productForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" placeholder="Product name" required>
-          <mat-error *ngIf="productForm.get('name')?.hasError('required')">
-            Name is required
-          </mat-error>
-        </mat-form-field>
+        <app-custom-input
+          label="Name"
+          placeholder="Product name"
+          type="text"
+          [required]="true"
+          [maxLength]="100"
+          [control]="productForm.get('name')"
+          [errorMessage]="getErrorMessage('name')"
+          formControlName="name">
+        </app-custom-input>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" placeholder="Product description" rows="3"></textarea>
-        </mat-form-field>
+        <app-custom-textarea
+          label="Description"
+          placeholder="Product description"
+          [maxLength]="255"
+          [rows]="3"
+          [control]="productForm.get('description')"
+          [errorMessage]="getErrorMessage('description')"
+          hint="Optional - Maximum 255 characters"
+          formControlName="description">
+        </app-custom-textarea>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Price</mat-label>
-          <input matInput type="number" formControlName="price" placeholder="0.00" required>
-          <mat-error *ngIf="productForm.get('price')?.hasError('required')">
-            Price is required
-          </mat-error>
-          <mat-error *ngIf="productForm.get('price')?.hasError('min')">
-            Price must be greater than or equal to 0
-          </mat-error>
-        </mat-form-field>
+        <app-custom-input
+          label="Price"
+          placeholder="0.00"
+          type="number"
+          [required]="true"
+          [min]="0.01"
+          step="0.01"
+          [control]="productForm.get('price')"
+          [errorMessage]="getErrorMessage('price')"
+          formControlName="price">
+        </app-custom-input>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Code</mat-label>
-          <input matInput formControlName="code" placeholder="Product code">
-        </mat-form-field>
+        <app-custom-input
+          label="Code"
+          placeholder="Product code"
+          type="text"
+          [control]="productForm.get('code')"
+          hint="Optional - Product identifier code"
+          formControlName="code">
+        </app-custom-input>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Category</mat-label>
-          <mat-select formControlName="categoryId">
-            <mat-option [value]="">None</mat-option>
-            <mat-option *ngFor="let category of categories" [value]="category.id">
-              {{ category.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <app-custom-select
+          label="Category"
+          placeholder="Select a category"
+          [required]="true"
+          [options]="categoryOptions"
+          [control]="productForm.get('categoryId')"
+          [errorMessage]="getErrorMessage('categoryId')"
+          formControlName="categoryId">
+        </app-custom-select>
 
         <div class="checkbox-field">
           <mat-checkbox formControlName="status">Active</mat-checkbox>
